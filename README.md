@@ -38,7 +38,7 @@ Discover and monitor **volatility regimes** from options data (WRDS OPTIONM/CRSP
 │  │  └─ plots/                  # metric scans, dendrograms, stability plots
 │  └─ scripts/pipeline.py        # main unsupervised pipeline entrypoint
 │
-├─ data_tools/
+├─ data-engineering/
 │  ├─ append_features.py                 # ATM/skew/curvature (streaming)
 │  ├─ consolidate_historical_options_data.py
 │  ├─ words_stock_prc_generator.py       # CRSP streaming + Fibonacci price diffs
