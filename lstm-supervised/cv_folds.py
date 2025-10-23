@@ -76,7 +76,7 @@ def custom_expanding_multi_dataset_cv_split(
             test_idx = combined_df[test_mask].index.values
 
             if len(train_idx) == 0 or len(test_idx) == 0:
-                print(f"⚠️  Fold {fold_id} skipped — insufficient data for {train_start_year}-{test_end_year}")
+                print(f"  Fold {fold_id} skipped — insufficient data for {train_start_year}-{test_end_year}")
                 continue
 
             fold_info = {
@@ -188,7 +188,7 @@ def nested_cv_evaluate_models(
             y_test_clean = y_test[test_valid_mask]
 
             if len(X_train_clean) == 0 or len(X_test_clean) == 0:
-                print(f"  ⚠️ Skipping fold {fold_id} - insufficient clean data")
+                print(f"  Skipping fold {fold_id} - insufficient clean data")
                 continue
 
             if verbose:
@@ -202,9 +202,9 @@ def nested_cv_evaluate_models(
                     param_grid=config['params'],
                     cv=inner_cv_folds,
                     scoring='neg_mean_squared_error',
-                    n_jobs=-1,  # ✅ Use all cores for CV
+                    n_jobs=-1,  #  Use all cores for CV
                     verbose=0,
-                    pre_dispatch='2*n_jobs'  # ✅ Memory-efficient parallelization
+                    pre_dispatch='2*n_jobs'  #  Memory-efficient parallelization
                 )
 
                 if verbose:
@@ -256,7 +256,7 @@ def nested_cv_evaluate_models(
                     print(f"  Outer fold test R²: {r2:.6f}")
 
             except Exception as e:
-                print(f"  ❌ Error in fold {fold_id}: {str(e)}")
+                print(f"   Error in fold {fold_id}: {str(e)}")
                 continue
 
         # Aggregate results for this model
@@ -299,7 +299,7 @@ def nested_cv_evaluate_models(
                 print(f"  RMSE: {perf['avg_rmse']:.6f} ± {perf['std_rmse']:.6f}")
                 print(f"  Folds: {perf['n_folds']}")
         else:
-            print(f"\n⚠️ No valid results for {model_name}")
+            print(f"\n No valid results for {model_name}")
             all_results[model_name] = None
 
     # Create detailed results DataFrame
@@ -324,7 +324,7 @@ def nested_cv_evaluate_models(
                   f"{results['std_rmse']:<15.6f} {results['n_folds']:<10}")
 
         best_model_name = sorted_models[0][0]
-        print(f"\n🏆 Best Model: {best_model_name}")
+        print(f"\n Best Model: {best_model_name}")
         print(f"   RMSE: {sorted_models[0][1]['avg_rmse']:.6f} ± {sorted_models[0][1]['std_rmse']:.6f}")
 
     print("=" * 80 + "\n")
@@ -334,7 +334,7 @@ def nested_cv_evaluate_models(
 
 def visualize_cv_splits(cv_splits):
     """Print a visual representation of the CV split structure."""
-    print("\n📊 Cross-Validation Structure:")
+    print("\n Cross-Validation Structure:")
     print("=" * 80)
 
     for fold in cv_splits:
@@ -739,7 +739,7 @@ def nested_cv_evaluate_lstm(
 
         return results_summary, detailed_df
     else:
-        print("\n⚠️ No valid LSTM results obtained")
+        print("\n No valid LSTM results obtained")
         return None, pd.DataFrame()
 
 def compare_all_models(
@@ -796,7 +796,7 @@ def compare_all_models(
 
     # Highlight best model
     best_model = comparison_df.iloc[0]
-    print(f"\n🏆 BEST OVERALL MODEL: {best_model['Model']}")
+    print(f"\n BEST OVERALL MODEL: {best_model['Model']}")
     print(f"   Type: {best_model['Type']}")
     print(f"   RMSE: {best_model['Avg RMSE']:.6f} ± {best_model['Std RMSE']:.6f}")
     print("=" * 80 + "\n")
