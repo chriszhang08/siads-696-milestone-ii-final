@@ -25,11 +25,11 @@ def configure_gpu():
             # Enable memory growth for all GPUs
             for gpu in gpus:
                 tf.config.experimental.set_memory_growth(gpu, True)
-                print(f"✅ Memory growth enabled for: {gpu}")
+                print(f" Memory growth enabled for: {gpu}")
 
             # Set the first GPU as visible (if multiple GPUs)
             tf.config.set_visible_devices(gpus[0], 'GPU')
-            print(f"✅ Using GPU: {gpus[0]}")
+            print(f" Using GPU: {gpus[0]}")
 
             # Test GPU computation
             print("Testing GPU computation...")
@@ -37,15 +37,15 @@ def configure_gpu():
                 a = tf.random.normal([1000, 1000])
                 b = tf.matmul(a, a)
                 result = tf.reduce_sum(b)
-            print(f"✅ GPU test successful: {result.numpy():.2f}")
+            print(f" GPU test successful: {result.numpy():.2f}")
 
             return True
 
         except RuntimeError as e:
-            print(f"❌ GPU configuration error: {e}")
+            print(f" GPU configuration error: {e}")
             return False
     else:
-        print("❌ No GPU devices found. Running on CPU.")
+        print(" No GPU devices found. Running on CPU.")
         return False
 
 
