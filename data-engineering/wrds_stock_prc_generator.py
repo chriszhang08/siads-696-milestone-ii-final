@@ -122,7 +122,7 @@ def stream_stock_data(engine: Engine, ticker: str) -> pl.DataFrame | None:
     """
 
     try:
-        print(f"🔄 Streaming stock data for {ticker}...")
+        print(f" Streaming stock data for {ticker}...")
 
         stock_df = pl.read_database(
             query=stock_query,
@@ -132,11 +132,11 @@ def stream_stock_data(engine: Engine, ticker: str) -> pl.DataFrame | None:
             infer_schema_length=False
         )
 
-        print(f"✅ Successfully streamed {stock_df.shape[0]:,} stock records for {ticker}")
+        print(f" Successfully streamed {stock_df.shape[0]:,} stock records for {ticker}")
         return stock_df
 
     except Exception as e:
-        print(f"❌ Error streaming stock data for {ticker}: {str(e)}")
+        print(f" Error streaming stock data for {ticker}: {str(e)}")
         return None
 
 
@@ -154,7 +154,7 @@ def calculate_fibonacci_price_differences(stock_df: pl.DataFrame, max_days: int 
     """
     fib_days = generate_fibonacci_up_to(max_days)
 
-    print(f"🔢 Calculating price differences for {len(fib_days)} Fibonacci days: {fib_days}")
+    print(f" Calculating price differences for {len(fib_days)} Fibonacci days: {fib_days}")
 
     # Sort by date to ensure proper ordering
     stock_df = stock_df.sort('date')
@@ -174,7 +174,7 @@ def calculate_fibonacci_price_differences(stock_df: pl.DataFrame, max_days: int 
     max_fib_day = max(fib_days)
     result_df = result_df.filter(pl.col(f'price_diff_{max_fib_day}d').is_not_null())
 
-    print(f"✅ Calculated price differences. Retained {result_df.shape[0]:,} records with complete data")
+    print(f" Calculated price differences. Retained {result_df.shape[0]:,} records with complete data")
 
     return result_df
 
@@ -201,8 +201,8 @@ def save_to_parquet(df: pl.DataFrame, output_path: Path, ticker: str):
         use_pyarrow=True
     )
 
-    print(f"✅ Successfully saved {df.shape[0]:,} records to {output_file}")
-    print(f"📊 Columns: {df.columns}")
+    print(f" Successfully saved {df.shape[0]:,} records to {output_file}")
+    print(f" Columns: {df.columns}")
 
 
 def main():
@@ -230,7 +230,7 @@ def main():
 
     try:
         print(f"\n{'=' * 60}")
-        print(f"📈 Stock Price Difference Calculator")
+        print(f" Stock Price Difference Calculator")
         print(f"   Ticker: {args.ticker}")
         print(f"   Max Days: {args.max_days}")
         print(f"{'=' * 60}\n")
@@ -238,13 +238,13 @@ def main():
         # Step 1: Create database connection
         print("🔌 Connecting to WRDS database...")
         engine = create_wrds_engine_direct()
-        print("✅ Connected successfully\n")
+        print(" Connected successfully\n")
 
         # Step 2: Stream stock data
         stock_df = stream_stock_data(engine, args.ticker)
 
         if stock_df is None or stock_df.height == 0:
-            print(f"❌ No data found for ticker {args.ticker}")
+            print(f" No data found for ticker {args.ticker}")
             sys.exit(1)
 
         # Step 3: Calculate price differences
@@ -255,11 +255,11 @@ def main():
         save_to_parquet(result_df, output_path, args.ticker)
 
         print(f"\n{'=' * 60}")
-        print(f"✅ Processing completed successfully!")
+        print(f" Processing completed successfully!")
         print(f"{'=' * 60}\n")
 
     except Exception as e:
-        print(f"\n❌ ERROR: {str(e)}", file=sys.stderr)
+        print(f"\n ERROR: {str(e)}", file=sys.stderr)
         sys.exit(1)
     finally:
         if 'engine' in locals():
