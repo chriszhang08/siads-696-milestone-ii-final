@@ -89,7 +89,7 @@ def parallel_data_chunks_processing(df: pl.DataFrame, n_chunks: int) -> pl.DataF
         chunk = df.slice(i, chunk_size)
         chunks.append(chunk)
 
-    print(f"🔄 Processing {len(chunks)} chunks in parallel...")
+    print(f" Processing {len(chunks)} chunks in parallel...")
 
     # Process chunks in parallel using ProcessPoolExecutor
     with ProcessPoolExecutor(max_workers=min(n_chunks, mp.cpu_count())) as executor:
@@ -98,7 +98,7 @@ def parallel_data_chunks_processing(df: pl.DataFrame, n_chunks: int) -> pl.DataF
 
     # Concatenate results
     result_df = pl.concat(processed_chunks)
-    print(f"✅ Parallel processing completed: {result_df.height} total records")
+    print(f" Parallel processing completed: {result_df.height} total records")
 
     return result_df
 
@@ -140,11 +140,11 @@ def stream_options_data(engine: Engine, secids: List[str], year: int) -> DataFra
             infer_schema_length=False
         )
 
-        print(f"✅ Successfully streamed {df.shape[0]:,} records")
+        print(f" Successfully streamed {df.shape[0]:,} records")
         return df
 
     except Exception as e:
-        print(f"❌ Error streaming options data: {str(e)}")
+        print(f" Error streaming options data: {str(e)}")
         return None
 
 
@@ -219,7 +219,7 @@ def fetch_stock_data(file_path: Union[str, Path]) -> pl.DataFrame:
             memory_map=True
         )
 
-        print(f"✅ Loaded {df.shape[0]:,} rows and {df.shape[1]} columns from {file_path.name}")
+        print(f" Loaded {df.shape[0]:,} rows and {df.shape[1]} columns from {file_path.name}")
 
         return df
 
@@ -251,15 +251,15 @@ def process_ticker_optimized(ticker: str, year: int, config: Dict, output_dir: P
 
         secid_results = pd.read_sql_query(secid_query, db, params={'ticker': ticker})
         if secid_results.empty:
-            print(f"❌ No secids found for {ticker}")
+            print(f" No secids found for {ticker}")
             return
 
         unique_secids = secid_results['secid'].unique().tolist()
-        print(f"✅ Found {len(unique_secids)} secids for {ticker}")
+        print(f" Found {len(unique_secids)} secids for {ticker}")
 
         # Step 2: Stream options data with optimized query
         # Use Polars streaming with large batch size for cluster
-        print(f"🔄 Streaming options data...")
+        print(f" Streaming options data...")
         df = stream_options_data(db, unique_secids, year)
 
         # Step 2.1: Stream stock price data
@@ -274,9 +274,9 @@ def process_ticker_optimized(ticker: str, year: int, config: Dict, output_dir: P
                 how='left',
                 suffix='_stock'
             )
-            print(f"✅ Merged stock data: {options_df.shape[0]:,} records with stock info")
+            print(f" Merged stock data: {options_df.shape[0]:,} records with stock info")
 
-        print(f"✅ Loaded {options_df.shape[0]:,} records")
+        print(f" Loaded {options_df.shape[0]:,} records")
 
         # Step 3: Apply volume filtering
         volume_threshold = options_df.select(
@@ -284,7 +284,7 @@ def process_ticker_optimized(ticker: str, year: int, config: Dict, output_dir: P
         ).item()
 
         df_filtered = options_df.filter(pl.col('volume') <= volume_threshold)
-        print(f"📊 After volume filtering: {df_filtered.shape[0]:,} records")
+        print(f" After volume filtering: {df_filtered.shape[0]:,} records")
 
         # filter out records with null impl_volatility, delta, theta, vega
         df_filtered = df_filtered.filter(
@@ -320,10 +320,10 @@ def process_ticker_optimized(ticker: str, year: int, config: Dict, output_dir: P
             use_pyarrow=True
         )
 
-        print(f"✅ {ticker} processing completed successfully")
+        print(f" {ticker} processing completed successfully")
 
     except Exception as e:
-        print(f"❌ Error processing {ticker}: {str(e)}")
+        print(f" Error processing {ticker}: {str(e)}")
         raise
     finally:
         db.dispose(close=True)
@@ -354,7 +354,7 @@ def main():
         )
 
     except Exception as e:
-        print(f"\n❌ ERROR: An exception occurred while processing.\nReason: {e}", file=sys.stderr)
+        print(f"\n ERROR: An exception occurred while processing.\nReason: {e}", file=sys.stderr)
         sys.exit(1)
 
 
