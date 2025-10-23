@@ -12,7 +12,7 @@ def consolidate_ticker_across_years(ticker: str, years: List[int],
     from multiple parquet files located in ticker/year subdirectories.
     """
 
-    print(f"🔄 Consolidating {ticker} across {len(years)} years...")
+    print(f" Consolidating {ticker} across {len(years)} years...")
 
     ticker_dfs = []
     years_found = []
@@ -33,14 +33,14 @@ def consolidate_ticker_across_years(ticker: str, years: List[int],
                     total_records += year_df.height
                     print(f"  📁 {year}: {len(parquet_files)} files, {year_df.height:,} records")
                 except Exception as e:
-                    print(f"  ❌ Error reading {year} parquet files: {str(e)}")
+                    print(f"   Error reading {year} parquet files: {str(e)}")
             else:
-                print(f"  ⚠️  No parquet files found in {year_dir}")
+                print(f"    No parquet files found in {year_dir}")
         else:
-            print(f"  ⚠️  Year directory {year_dir} does not exist")
+            print(f"    Year directory {year_dir} does not exist")
 
     if not ticker_dfs:
-        print(f"  ⚠️  No data files found for {ticker}")
+        print(f"    No data files found for {ticker}")
         return {'status': 'no_data', 'years_found': []}
 
     # Concatenate all years dataframes vertically
@@ -76,7 +76,7 @@ def consolidate_ticker_across_years(ticker: str, years: List[int],
     with open(metadata_file, 'w') as f:
         json.dump(metadata, f, indent=2)
 
-    print(f"✅ {ticker} consolidated: {total_records:,} records across {len(years_found)} years")
+    print(f" {ticker} consolidated: {total_records:,} records across {len(years_found)} years")
 
     return {
         'status': 'success',
@@ -106,4 +106,4 @@ if __name__ == "__main__":
     with open(summary_file, 'w') as f:
         json.dump(summary, f, indent=2)
 
-    print(f"📄 Consolidation summary written to {summary_file}")
+    print(f" Consolidation summary written to {summary_file}")
