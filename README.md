@@ -5,6 +5,7 @@ Discover and monitor **volatility regimes** from options data (WRDS OPTIONM/CRSP
 ---
 
 ## Table of Contents
+- [Data Source](#datasource)
 - [Architecture](#architecture)
 - [Quickstart](#quickstart)
 - [Dashboard (Flask + Plotly + Postgres)](#dashboard-flask--plotly--postgres)
@@ -16,6 +17,10 @@ Discover and monitor **volatility regimes** from options data (WRDS OPTIONM/CRSP
 - [License](#license)
 
 ---
+
+## Data Source
+
+This project uses market and options data from the [OptionMetrics IvyDB US](https://wrds-www.wharton.upenn.edu/data-dictionary/optionm_all/) and [CRSP databases](https://wrds-www.wharton.upenn.edu/data-dictionary/crsp_a_stock/) accessed via the WRDS (Wharton Research Data Services) API. The primary dataset, optionm.opprcd{YYYY} (e.g., opprcd2023), provides daily end-of-day option prices and implied volatilities for U.S. equities. Supplementary tables include optionm.secnmd for security identifiers and crsp.dsf / crsp.msenames for stock prices and name histories. Data was retrieved via WRDS SQL Queries API, and processed with Polars DataFrames. 
 
 ## Architecture
 
